@@ -1,0 +1,14 @@
+package com.data.jpa.service.impl;
+
+import com.data.jpa.entity.Movie;
+import com.data.jpa.service.IMovieService;
+
+public class MovieServiceImpl implements IMovieService {
+
+	@Override
+	public String createMovie(Movie movie) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

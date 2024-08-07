@@ -1,0 +1,5 @@
+package com.data.jpa.service;
+
+public interface IMovieService {
+
+}

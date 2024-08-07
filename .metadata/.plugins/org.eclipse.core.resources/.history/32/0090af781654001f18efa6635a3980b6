@@ -1,0 +1,16 @@
+package com.data.jpa.entity;
+
+import java.io.Serializable;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "data_jpa_movie_tab")
+public class Movie implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	
+	
+	
+}

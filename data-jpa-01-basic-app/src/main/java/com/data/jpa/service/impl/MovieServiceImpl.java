@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.data.jpa.entity.Movie;
+import com.data.jpa.exceptions.MovieNotFoundException;
 import com.data.jpa.repo.MovieRepository;
 import com.data.jpa.service.IMovieService;
 
@@ -19,6 +20,23 @@ public class MovieServiceImpl implements IMovieService {
 			return "Movie "+createdMovie.getMovieName()+" Saved Successfully With Id : "+ createdMovie.getMovieId();
 		else
 			throw new IllegalArgumentException("Something went wrong...");
+	}
+
+	@Override
+	public Long fetchMovieCount() {
+		long count = movieRepository.count();
+		if(count>0)
+			return count;
+		else
+			throw new IllegalArgumentException("No movies are found!");
+	}
+
+	@Override
+	public String checkMovieById(Long movieId) {
+		if(movieRepository.existsById(movieId))
+			return "Yes, movie with id : '"+movieId+"' available!";
+		else
+			throw new MovieNotFoundException("Movie not found with given id '"+movieId+"'");
 	}
 
 }
