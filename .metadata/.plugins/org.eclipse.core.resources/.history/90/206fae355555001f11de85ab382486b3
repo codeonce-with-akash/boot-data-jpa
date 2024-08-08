@@ -1,0 +1,12 @@
+package com.data.jpa.service;
+
+import com.data.jpa.entity.Movie;
+
+public interface IMovieService {
+	//1. save operation
+	public String createMovie(Movie movie);
+	//2. count operation
+	public Long fetchMovieCount();
+	//3. exist by id operation
+	public String checkMovieById(Long movieId);
+}

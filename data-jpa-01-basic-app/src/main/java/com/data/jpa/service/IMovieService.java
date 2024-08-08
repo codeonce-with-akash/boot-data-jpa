@@ -1,5 +1,7 @@
 package com.data.jpa.service;
 
+import java.util.List;
+
 import com.data.jpa.entity.Movie;
 
 public interface IMovieService {
@@ -7,6 +9,16 @@ public interface IMovieService {
 	public String createMovie(Movie movie);
 	//2. count operation
 	public Long fetchMovieCount();
-	//3. exist by id operation
+	//3. exist-by-id operation
 	public String checkMovieById(Long movieId);
+	//4. findAll operation
+	public Iterable<Movie> fetchAllMovies();
+	//5. findAllByIds operation
+	public Iterable<Movie> fetchAllMoviesByIds(List<Long> ids);
+	//6. findById operation
+	public Movie fetchMovieById(Long movieId);
+	//7. partial object update operation
+	public String updateMovieReleaseDateAndRating(Long movieId, String newReleaseDate, Float newRating);
+	//8. full object update operation
+	public String updateMovieObject(Movie movie);
 }
