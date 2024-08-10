@@ -19,7 +19,6 @@ public class MovieServiceImpl implements IMovieService {
 	private MovieRepository movieRepository;
 
 	public String createMovie(Movie movie) {
-		movie = null;
 		Movie createdMovie = movieRepository.save(movie);
 		if (createdMovie.getMovieId() != null)
 			return "Movie " + createdMovie.getMovieName() + " Saved Successfully With Id : " + createdMovie.getMovieId();
@@ -50,7 +49,7 @@ public class MovieServiceImpl implements IMovieService {
 		if (list.spliterator().getExactSizeIfKnown() > 0)
 			return list;
 		else
-			throw new IllegalArgumentException("No movies found!");
+			throw new IllegalArgumentException("No movies are available!");
 	}
 
 	@Override
@@ -108,5 +107,43 @@ public class MovieServiceImpl implements IMovieService {
 		//movieRepository.save(dbMovie);
 		return "Movie '"+dbMovie.getMovieName()+"' updated successfully!";
 	}
+	
+	@Override
+	public String deleteMovieById(Long movieId) {
+		Movie movie = fetchMovieById(movieId);
+		movieRepository.deleteById(movie.getMovieId());
+		return "Movie '"+movie.getMovieName()+"' deleted successfully!";
+	}
 
+	@Override
+	public String deleteAllMoviesById(List<Long> movieIds) {
+		Iterable<Movie> allMoviesByIds = fetchAllMoviesByIds(movieIds);
+		if(allMoviesByIds.spliterator().getExactSizeIfKnown() > 0) {
+			movieRepository.deleteAllById(movieIds);
+		}
+		return "Movies with given ids : '"+movieIds+"' are deleted successfully!";
+	}
+	
+	@Override
+	public String deleteByMovie(Long movieId) {
+		Movie movie = fetchMovieById(movieId);
+		movieRepository.delete(movie);
+		return "Movie : '"+movie.getMovieName()+"' deleted successfully!";
+	}
+	
+	@Override
+	public String deleteAllByMovies(List<Long> movieIds) {
+		Iterable<Movie> allMoviesByIds = fetchAllMoviesByIds(movieIds);
+		if(allMoviesByIds.spliterator().getExactSizeIfKnown() > 0)
+			movieRepository.deleteAll(allMoviesByIds);
+		return "Movies '"+allMoviesByIds+"' are deleted successfully!";
+	}
+	
+	@Override
+	public String deleteAllMovies() {
+		Iterable<Movie> allMovies = fetchAllMovies();
+		if(allMovies.spliterator().getExactSizeIfKnown() > 0)
+			movieRepository.deleteAll();
+		return "All movies are deleted successfully!";
+	}
 }

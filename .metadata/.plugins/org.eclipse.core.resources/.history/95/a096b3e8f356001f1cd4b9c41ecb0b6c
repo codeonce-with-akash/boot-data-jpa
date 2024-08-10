@@ -1,0 +1,133 @@
+package com.data.jpa.service.impl;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.data.jpa.entity.Movie;
+import com.data.jpa.exceptions.MovieNotFoundException;
+import com.data.jpa.repo.MovieRepository;
+import com.data.jpa.service.IMovieService;
+
+@Service
+public class MovieServiceImpl implements IMovieService {
+
+	@Autowired
+	private MovieRepository movieRepository;
+
+	public String createMovie(Movie movie) {
+		movie = null;
+		Movie createdMovie = movieRepository.save(movie);
+		if (createdMovie.getMovieId() != null)
+			return "Movie " + createdMovie.getMovieName() + " Saved Successfully With Id : " + createdMovie.getMovieId();
+		else
+			throw new IllegalArgumentException("Something went wrong...");
+	}
+
+	@Override
+	public Long fetchMovieCount() {
+		long count = movieRepository.count();
+		if (count > 0)
+			return count;
+		else
+			throw new IllegalArgumentException("No movies are found!");
+	}
+
+	@Override
+	public String checkMovieById(Long movieId) {
+		if (movieRepository.existsById(movieId))
+			return "Yes, movie with id : '" + movieId + "' available!";
+		else
+			throw new MovieNotFoundException("Movie not found with given id '" + movieId + "'");
+	}
+
+	@Override
+	public Iterable<Movie> fetchAllMovies() {
+		Iterable<Movie> list = movieRepository.findAll();
+		if (list.spliterator().getExactSizeIfKnown() > 0)
+			return list;
+		else
+			throw new IllegalArgumentException("No movies found!");
+	}
+
+	@Override
+	public Iterable<Movie> fetchAllMoviesByIds(List<Long> ids) {
+		Iterable<Movie> list = movieRepository.findAllById(ids);
+		if(list.spliterator().getExactSizeIfKnown() > 0)
+			return list;
+		else
+			throw new IllegalArgumentException("No movies are found with given ids!");
+	}
+	
+	@Override
+	public Movie fetchMovieById(Long movieId) {
+		
+		//APPROACH#1 
+		Optional<Movie> movie = movieRepository.findById(movieId);
+		if(movie.isPresent())
+			return movie.get();
+		else 
+			throw new MovieNotFoundException("Movie with id : '"+movieId+"' not found!");
+		
+		/*
+		 * APPROACH#2
+		 *
+		return movieRepository.findById(movieId).orElseThrow(() -> new MovieNotFoundException("Movie with id : '"+movieId+"' not found!"));
+		 */
+		
+		/*
+		 * APPROACH#3
+		 *
+		return movieRepository.findById(movieId).orElse(new Movie());
+		 */
+	}
+	
+	@Transactional
+	public String updateMovieReleaseDateAndRating(Long movieId, String newReleaseDate, Float newRating) {
+		Movie movie = fetchMovieById(movieId);
+		if(newReleaseDate != null)
+			movie.setReleaseDate(newReleaseDate);
+		if(newRating != null)
+			movie.setRating(newRating);
+		//movieRepository.save(movie);
+		return "Movie '"+movie.getMovieName()+"' updated successfully!";
+	}
+	
+	@Transactional
+	public String updateMovieObject(Movie movie) {
+		Movie dbMovie = fetchMovieById(movie.getMovieId());
+		if(movie.getMovieName() != null)
+			dbMovie.setMovieName(movie.getMovieName());
+		if(movie.getReleaseDate() != null)
+			dbMovie.setReleaseDate(movie.getReleaseDate());
+		if(movie.getRating() != null)
+			dbMovie.setRating(movie.getRating());
+		//movieRepository.save(dbMovie);
+		return "Movie '"+dbMovie.getMovieName()+"' updated successfully!";
+	}
+	
+	@Override
+	public String deleteMovieById(Long movieId) {
+		Movie movie = fetchMovieById(movieId);
+		movieRepository.deleteById(movie.getMovieId());
+		return "Movie '"+movie.getMovieName()+"' deleted successfully!";
+	}
+
+	@Override
+	public String deleteAllMoviesById(List<Long> movieIds) {
+		Iterable<Movie> allMoviesByIds = fetchAllMoviesByIds(movieIds);
+		if(allMoviesByIds.spliterator().getExactSizeIfKnown() > 0) {
+			movieRepository.deleteAllById(movieIds);
+		}
+		return "Movies with given ids : '"+movieIds+"' are deleted successfully!";
+	}
+	
+	@Override
+	public String deleteByMovie(Long movieId) {
+		
+		return null;
+	}
+}

@@ -21,4 +21,14 @@ public interface IMovieService {
 	public String updateMovieReleaseDateAndRating(Long movieId, String newReleaseDate, Float newRating);
 	//8. full object update operation
 	public String updateMovieObject(Movie movie);
+	//9. deleteById operation
+	public String deleteMovieById(Long movieId);
+	//10. deleteAllByIds operation
+	public String deleteAllMoviesById(List<Long> movieIds);
+	//11. delete operation
+	public String deleteByMovie(Long movieId);
+	//12. deleteAll(-) operation
+	public String deleteAllByMovies(List<Long> movieIds);
+	//13. deleteAll() operation
+	public String deleteAllMovies();
 }

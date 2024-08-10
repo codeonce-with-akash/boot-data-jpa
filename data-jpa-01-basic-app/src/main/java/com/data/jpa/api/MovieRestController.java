@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -126,6 +127,61 @@ public class MovieRestController {
 			resp = new ResponseEntity<>(movieService.updateMovieObject(movie), HttpStatus.OK);
 		} catch (MovieNotFoundException mnfe) {
 			resp = new ResponseEntity<>(mnfe.getMessage(),HttpStatus.NOT_MODIFIED);
+		}
+		return resp;
+	}
+	
+	@DeleteMapping("/delete/{movieId}")
+	public ResponseEntity<String> deleteMovieById(@PathVariable(name = "movieId") Long movieId){
+		ResponseEntity<String> resp = null;
+		try {
+			resp = new ResponseEntity<>(movieService.deleteMovieById(movieId), HttpStatus.OK);
+		} catch (MovieNotFoundException mnfe) {
+			resp = new ResponseEntity<>(mnfe.getMessage(), HttpStatus.NOT_FOUND);
+		}
+		return resp;
+	}
+	
+	@PostMapping("/delete/all/ids")
+	public ResponseEntity<String> deleteAllMoviesByIds(@RequestBody List<Long> movieIds){
+		ResponseEntity<String> resp = null;
+		try {
+			resp = new ResponseEntity<>(movieService.deleteAllMoviesById(movieIds), HttpStatus.OK);
+		} catch (Exception e) {
+			resp = new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+		return resp;
+	}
+	
+	@DeleteMapping("/delete/entity/{movieId}")
+	public ResponseEntity<String> deleteMovieByEntity(@PathVariable(name = "movieId") Long movieId){
+		ResponseEntity<String> resp = null;
+		try {
+			resp = new ResponseEntity<>(movieService.deleteByMovie(movieId), HttpStatus.OK);
+		} catch (MovieNotFoundException mnfe) {
+			resp = new ResponseEntity<>(mnfe.getMessage(), HttpStatus.NOT_FOUND);
+		}
+		return resp;
+	}
+	
+	@PostMapping("/delete/all/entities")
+	public ResponseEntity<String> deleteAllMoviesByEntities(@RequestBody List<Long> movieIds){
+		ResponseEntity<String> resp = null;
+		try {
+			resp = new ResponseEntity<>(movieService.deleteAllByMovies(movieIds), HttpStatus.OK);
+		} catch (Exception e) {
+			resp = new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+		return resp;
+	}
+	
+	@DeleteMapping("/delete/all")
+	public ResponseEntity<String> deleteAllMovies(){
+		ResponseEntity<String> resp = null;
+		try {
+			resp = new ResponseEntity<>(movieService.deleteAllMovies(), HttpStatus.OK);
+		} catch (Exception e) {
+			resp = new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 		return resp;
 	}
